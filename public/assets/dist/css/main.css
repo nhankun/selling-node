@@ -1,0 +1,28 @@
+.max90px{
+    max-width: 90px;
+}
+
+.hidden-element{
+    display: none;
+}
+
+.widget-user-img-full{
+    width: 100% !important;
+    height: auto !important;
+}
+
+.widget-icon{
+    width: 100px;
+    height: 100px;
+}
+
+.widget-user-img-shape{
+    background-color: grey;
+    clip-path: circle(50% at 50% 50%);
+    shape-outside: circle(50% at 50% 50%);
+}
+
+.widget-user-img-shape:hover .icon-lable{
+    transform: scale(1.05);
+    transition: all .5s;
+}
