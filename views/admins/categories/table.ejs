@@ -1,0 +1,17 @@
+<%if(categories && categories.length){
+    for (const [key, value] of Object.entries(categories)) {  
+%>
+    <tr>
+        <td><%= value.id %>.</td>
+        <td><%= value.name %></td>
+        <td><img src="/assets/upload/defaults/photo1.png" class="img-circle elevation-2 max90px" alt="icon"></td>
+        <td>
+            <button type="button" class="btn btn-block bg-gradient-danger"><i class="fas fa-ban"></i></button>
+            <button type="button" class="btn btn-block bg-gradient-success"><i class="fas fa-check-circle"></i></button>
+        </td>
+        <td>Hành động</td>
+    </tr>
+<%
+    }
+}
+%>
