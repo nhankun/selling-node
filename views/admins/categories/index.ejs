@@ -24,18 +24,18 @@
                     <h3 class="card-title">
                         <div class="row">
                             <div class="col-5">
-                                <input type="text" class="form-control" placeholder="Tên loại">
+                                <input type="text" class="form-control" id="search" placeholder="Tên loại">
                             </div>
                             <div class="col-4">
-                                <select class="form-control select2" style="width: 100%;">
-                                    <option selected="selected">Trạng thái</option>
-                                    <option>Đã duyệt</option>
-                                    <option>Chưa duyệt</option>
-                                    <option>Chờ duyệt lại</option>
+                                <select class="form-control select2" id="status_search" style="width: 100%;">
+                                    <option selected="selected" value="">Trạng thái</option>
+                                    <option value="1">Đã duyệt</option>
+                                    <option value="0">Chưa duyệt</option>
+                                    <option value="2">Chờ duyệt lại</option>
                                 </select>
                             </div>
                             <div class="col-3">
-                                <button class="btn btn-block btn-outline-info"> search</button>
+                                <button class="btn btn-block btn-outline-info" id="btnsearch"> search</button>
                             </div>
                         </div>
                     </h3>
@@ -55,16 +55,77 @@
                             <th style="width: 100px"></th>
                         </tr>
                         </thead>
-                        <tbody>
-                            <%- include("table",{categories}) %>
+                        <tbody id="pannel">
+                            <%- include("table",{data:data.categories}) %>
                         </tbody>
                     </table>
                 </div>
                 <div class="card-footer clearfix" id="pagination">
-                    
+                    <%- include("../../pagination", {paginator: pages}) %>
                 </div>
             </div>
         </div>
         <!-- /.col-->
     </div>
 </section>
+<script src="/admin/back.js"></script>
+<script>
+    var url_approved = "{!! route('categories.approved', ['category' => 'category']) !!}";
+    var url_cancel = "{!! route('categories.cancel', ['category' => 'category']) !!}";
+
+    var categories = (function () {
+
+            var url = '/admin/categories';
+            var title = "Are you sure?";
+            var text = "You won't be able to revert this!";
+            var cancelButtonText = "Cancel";
+            var confirmButtonText = "Yes, delete it!";
+            var errorAjax = "server_issue";
+            var errorDelete = "error_delete";
+            let popupConfigApproved = {title:"Bạn chắc chắn hành động này?",type:"warning",text:"Bạn sẽ cấp phép cho loại sản phẩm này?", cancelButtonText: "không",confirmButtonText:"Có"}
+            let popupConfigCancel = {title:"Bạn chắc chắn hành động này?",type:"warning",text:"Bạn sẽ hủy bỏ loại sản phẩm này?", cancelButtonText: "không",confirmButtonText:"Có"}
+
+            var onReady = function () {
+                $('#pagination').on('click', 'ul.pagination a', function (event) {
+                    back.pagination(event, $(this), errorAjax)
+                });
+                $('#pannel').on('change', function () {
+                }).on('click', '.simpleConfirm', function (event) {
+                    back.destroy(event, $(this), url, title, text, confirmButtonText, cancelButtonText, errorDelete)
+                });
+                $('th span').click(function () {
+                    back.ordering(url, $(this), errorAjax)
+                });
+                $('#btnsearch').click(function () {
+                    back.filters(url, errorAjax)
+                });
+                $(this).on("click",'.cancel-active', function(){
+                    let categoryId = $(this).data("category");
+                    let target = url_cancel.replace("category",categoryId)
+                    let template = `<button class="mb-2 mr-2 btn btn-danger approved-active" data-category="${categoryId}"><i class="fa fa-ban"></i></button>`;
+                    back.cancel(this, target, "POST", template, errorAjax, popupConfigCancel)
+                });
+                $(this).on('click','.approved-active', function(){
+                    let categoryId = $(this).data("category");
+                    let target = url_approved.replace("category",categoryId)
+                    let template = `<button class="mb-2 mr-2 btn btn-success cancel-active" data-category="${categoryId}"><i class="fas fa-check-circle"></i></button>`
+                    back.approved(this, target, "POST", template, errorAjax, popupConfigApproved)
+                });
+                $('#search').keypress(function (event) {
+                    var keycode = (event.keyCode ? event.keyCode : event.which);
+                    // console.log(keycode);
+                    if (keycode == '13') {
+                        event.preventDefault();
+                        $('#btnsearch').focus().click();
+                    }
+                });
+            };
+
+            return {
+                onReady: onReady
+            }
+
+        })();
+
+    $(document).ready(categories.onReady)
+</script>
