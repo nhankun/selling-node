@@ -7,7 +7,7 @@ module.exports = {
         try {
             let parameters = helper.getParameters(req, params.categories);
             console.log(`[DEBUG] ${JSON.stringify(parameters)}`);
-            let data = await categoryService.getAll(parameters, req, res); 
+            let data = await categoryService.getAll(parameters, req); 
 
             if (!req.xhr) {
                 res.render("admins/categories/index",{data:data.data, pages:data.pages});

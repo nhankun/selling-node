@@ -3,7 +3,7 @@ const CategoryRepository = require('../repositories/admin/CategoryRepository');
 const pagina = require('../services/pagination');
 
 module.exports = {
-    getAll: async (parameters, req, res)=>{
+    getAll: async (parameters, req)=>{
         let result = {};
         let page = req.query.page || 1;
 		let size = req.query.size || 2;
@@ -12,7 +12,7 @@ module.exports = {
         parameters.size = size;
         parameters.page = page;
 
-        let totalData = await CategoryRepository.count();
+        let totalData = await CategoryRepository.count(parameters);
 
         result.data = await CategoryRepository.getAll(parameters)
         

@@ -1,5 +1,6 @@
 $(function () {
-
+    sortDiv();
+    
     $('.add_element_property').on("click", function (){
         let max = 0;
         let c = $('.general:last').attr('id');
@@ -89,4 +90,18 @@ $(function () {
             reader.readAsDataURL(file);
         }
     })
+
+    function sortDiv()
+    {
+        $(".properties").sortable({
+            cancel: ":input",
+            items: ".general",
+            start: function( event, ui ) {
+
+            },
+            stop: function( event, ui ) {
+
+            }
+        });
+    }
 })

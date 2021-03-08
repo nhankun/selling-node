@@ -40,7 +40,7 @@
                         </div>
                     </h3>
                     <div class="card-tools">
-                        <a href="" class="btn btn-info"> Thêm mới </a>
+                        <a href="/admin/categories/create" class="btn btn-info"> Thêm mới </a>
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -70,8 +70,8 @@
 </section>
 <script src="/admin/back.js"></script>
 <script>
-    var url_approved = "{!! route('categories.approved', ['category' => 'category']) !!}";
-    var url_cancel = "{!! route('categories.cancel', ['category' => 'category']) !!}";
+    var url_approved = "/categories/approved/category";
+    var url_cancel = "/categories/cancel/category";
 
     var categories = (function () {
 
@@ -82,9 +82,7 @@
             var confirmButtonText = "Yes, delete it!";
             var errorAjax = "server_issue";
             var errorDelete = "error_delete";
-            let popupConfigApproved = {title:"Bạn chắc chắn hành động này?",type:"warning",text:"Bạn sẽ cấp phép cho loại sản phẩm này?", cancelButtonText: "không",confirmButtonText:"Có"}
-            let popupConfigCancel = {title:"Bạn chắc chắn hành động này?",type:"warning",text:"Bạn sẽ hủy bỏ loại sản phẩm này?", cancelButtonText: "không",confirmButtonText:"Có"}
-
+        
             var onReady = function () {
                 $('#pagination').on('click', 'ul.pagination a', function (event) {
                     back.pagination(event, $(this), errorAjax)
@@ -98,18 +96,6 @@
                 });
                 $('#btnsearch').click(function () {
                     back.filters(url, errorAjax)
-                });
-                $(this).on("click",'.cancel-active', function(){
-                    let categoryId = $(this).data("category");
-                    let target = url_cancel.replace("category",categoryId)
-                    let template = `<button class="mb-2 mr-2 btn btn-danger approved-active" data-category="${categoryId}"><i class="fa fa-ban"></i></button>`;
-                    back.cancel(this, target, "POST", template, errorAjax, popupConfigCancel)
-                });
-                $(this).on('click','.approved-active', function(){
-                    let categoryId = $(this).data("category");
-                    let target = url_approved.replace("category",categoryId)
-                    let template = `<button class="mb-2 mr-2 btn btn-success cancel-active" data-category="${categoryId}"><i class="fas fa-check-circle"></i></button>`
-                    back.approved(this, target, "POST", template, errorAjax, popupConfigApproved)
                 });
                 $('#search').keypress(function (event) {
                     var keycode = (event.keyCode ? event.keyCode : event.which);

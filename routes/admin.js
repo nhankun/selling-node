@@ -11,6 +11,9 @@ router.get('/', function(req, res, next) {
 router.get("/categories", function(req, res){
     categoryController.getAll(req, res);
 })
+router.get("/categories/create", function(req, res){
+    res.render("admins/categories/create");
+})
 
   
 
