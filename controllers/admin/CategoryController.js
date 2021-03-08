@@ -1,26 +1,22 @@
-const categoryRepository = require("../../repositories/admin/CategoryRepository");
-const pagina = require('../../services/pagination');
+const categoryService = require("../../services/categoryService");
 const helper = require('../../services/helper');
 const params = require('../../config/parameters');
 
 module.exports = {
     getAll:async (req, res)=>{
-        let categories = {}
         try {
             let parameters = helper.getParameters(req, params.categories);
             console.log(`[DEBUG] ${JSON.stringify(parameters)}`);
-            categories = await categoryRepository.getAll(parameters, req, res); 
-            
-            let pages = pagina.pagination(categories)
+            let data = await categoryService.getAll(parameters, req, res); 
 
             if (!req.xhr) {
-                res.render("admins/categories/index",{data:categories, pages:pages});
+                res.render("admins/categories/index",{data:data.data, pages:data.pages});
             } else {
                 var renderedViews = {};
-                res.render('admins/categories/table', { data: categories.categories}, function (err, html) {
+                res.render('admins/categories/table', { data: data.data}, function (err, html) {
                     renderedViews.searchResults = html;
 
-                    res.render('./pagination', { paginator: pages }, function (err, html) {
+                    res.render('./pagination', { paginator: data.pages }, function (err, html) {
                         renderedViews.pagination = html;
 
                         res.json(renderedViews);
