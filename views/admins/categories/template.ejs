@@ -13,6 +13,7 @@
                 <div class="form-group">
                     <label for="inputName">Project Name</label>
                     <input type="text" id="inputName" name="name" class="form-control" value="AdminLTE">
+                    <p style="color: red;display:none;" id="error_name"></p>
                 </div>
                 <div class="form-group">
                     <div class="card card-widget widget-user">
@@ -56,6 +57,8 @@
                             <!-- /.row -->
                         </div>
                     </div>
+                    <p style="color: red;display:none;" id="error_banner"></p>
+                    <p style="color: red;display:none;" id="error_icon"></p>
                 </div>
             </div>
             <!-- /.card-body -->
@@ -136,10 +139,52 @@
     $(function () {
         $.validator.setDefaults({
             submitHandler: function () {
-                alert( "Form successful submitted!" );
+                let url = $('#form-category').attr('action');
+                let form_data = new FormData($('#form-category')[0]);
+                $.ajax({
+                    method: $("#form-category").attr("method"),
+                    url: url,
+                    data: form_data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        console.log(res);
+                        if(res.results.success == true){
+                            if($('#check_edit').val() == 1)
+                            {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: save_sucess,
+                                })
+                                $('#edit_tabs').find('.active').children().click();
+                            }else {
+                                if(!$('.modal').hasClass('js-preview')){
+                                    $('.content-wrapper').html(res.view);
+                                }else {
+                                    $("#modal_preview").modal('hide');
+                                    window.location.href = $(location).attr("href");
+                                }
+                            }
+                        }else{
+                            Swal.fire({
+                            icon: 'error',
+                            title: 'Sever errors',
+                            text: 'Something went wrong!',
+                            })
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err)
+                        if(err.responseJSON.status == 422)
+                            printErrors(err.responseJSON.data);
+                        else
+                            Swal.fire("server_issue");
+                    }
+                });
             }
         });
-        $('#form-create').validate({
+        $('#form-category').validate({
             rules: {
                 email: {
                     required: true,
@@ -149,7 +194,7 @@
                     required: true,
                     minlength: 5
                 },
-                name: {
+                name1: {
                     required: true
                 },
             },
@@ -162,7 +207,7 @@
                     required: "Please provide a password",
                     minlength: "Your password must be at least 5 characters long"
                 },
-                name: "Please accept our terms"
+                name1: "Please accept our terms"
             },
             errorElement: 'span',
             errorPlacement: function (error, element) {
@@ -176,5 +221,12 @@
                 $(element).removeClass('is-invalid');
             }
         });
+
+        function printErrors(errors) {
+            for (let [key, value] of Object.entries(errors)) {
+                console.log(value);
+                $("#error_"+key).replaceWith(`<p style="color: red;" id="error_${key}">${value}</p>`);
+            }      
+        }
     });
 </script>

@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const i18n = require('i18n');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -15,6 +16,22 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.engine('ejs', require('express-ejs-extend'));
+
+// lang
+i18n.configure({
+  locales:['vi','en'],
+  directory: __dirname + '/locales',
+  defaultLocale: 'vi',
+  // register :global,
+  cookie: 'lang',
+  objectNotation: true
+});
+app.use(i18n.init);
+const lang = function(req, res,next){
+  res.locals.language = res.getLocale(req);
+  res.locals.arr_lang = res.getLocales();
+  next();
+}
 
 app.use(logger('dev'));
 app.use(express.json());
