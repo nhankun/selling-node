@@ -1,6 +1,6 @@
-const helper = require('../services/helper');
-const CategoryRepository = require('../repositories/admin/CategoryRepository');
-const pagina = require('../services/pagination');
+const helper = require('../helper');
+const CategoryRepository = require('../../repositories/admin/CategoryRepository');
+const pagina = require('../pagination');
 
 module.exports = {
     getAll: async (parameters, req)=>{
@@ -22,5 +22,8 @@ module.exports = {
         result.pages = pagina.pagination(pageBuider)
         
         return  result;
+    },
+    store: (parameters) => {
+
     }
 }

@@ -150,28 +150,8 @@
                     processData: false,
                     success: function (res) {
                         console.log(res);
-                        if(res.results.success == true){
-                            if($('#check_edit').val() == 1)
-                            {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: save_sucess,
-                                })
-                                $('#edit_tabs').find('.active').children().click();
-                            }else {
-                                if(!$('.modal').hasClass('js-preview')){
-                                    $('.content-wrapper').html(res.view);
-                                }else {
-                                    $("#modal_preview").modal('hide');
-                                    window.location.href = $(location).attr("href");
-                                }
-                            }
-                        }else{
-                            Swal.fire({
-                            icon: 'error',
-                            title: 'Sever errors',
-                            text: 'Something went wrong!',
-                            })
+                        if(res.status == 200){
+                            window.location.href = "/admin/categories";
                         }
                     },
                     error: function (err) {
