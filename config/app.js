@@ -3,8 +3,9 @@ const config = {
         mysql: {
             host:'localhost',
             user:'root',
-            password:'',
-            database:'selling-projects'
+            password:'vanthinh133',
+            database:'selling_projects',
+            port: 3306,
         }
     },
     // listPerPage: env.LIST_PER_PAGE || 10,
